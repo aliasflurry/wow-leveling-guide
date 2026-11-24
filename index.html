@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Rebuild a RestedXP import for a different BattleTag in your browser.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; base-uri 'none'; form-action 'none'">
+  <title>RestedXP Guide Rebuilder</title>
+  <link rel="stylesheet" href="./site.css">
+  <script src="./guide.js" defer></script>
+  <script src="./site.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell brand"><span class="brand-mark" aria-hidden="true"></span>Guide Rebuilder</div>
+  </header>
+  <main class="shell workspace">
+    <section class="intro" aria-labelledby="page-title">
+      <h1 id="page-title">Rebuild a<br class="desktop-break"> leveling guide</h1>
+      <p class="lede">Create a RestedXP import for a different BattleTag.</p>
+    </section>
+
+    <section class="panel" aria-label="Guide settings and download">
+      <p id="startup" role="status">Checking for a saved guide…</p>
+      <noscript><p>Enable JavaScript to use the guide rebuilder.</p></noscript>
+
+      <form id="source-form" hidden>
+        <h2>Set up your original guide</h2>
+        <p class="secondary explanation">Choose the original import file and enter the BattleTag it was made for.</p>
+        <label for="source-file">Original import file</label>
+        <input id="source-file" type="file" accept=".txt,text/plain" required>
+        <label for="source-tag">Original BattleTag</label>
+        <input id="source-tag" type="text" placeholder="Name#1234" autocomplete="off" autocapitalize="off" spellcheck="false" required>
+        <button id="save-source" class="primary" type="submit">Save original guide</button>
+        <button id="cancel-source" class="text-button cancel" type="button" hidden>Cancel</button>
+        <p id="source-message" class="message" role="status"></p>
+      </form>
+
+      <form id="target-form" hidden>
+        <h2>Download an import</h2>
+        <p class="secondary explanation">Enter the BattleTag that will use the rebuilt guide.</p>
+        <label for="target-tag">Destination BattleTag</label>
+        <input id="target-tag" type="text" placeholder="Name#1234" autocomplete="off" autocapitalize="off" spellcheck="false" required>
+        <button id="download" class="primary" type="submit">Download rebuilt guide</button>
+        <p id="target-message" class="message" role="status"></p>
+        <p class="import-hint">Paste the downloaded file’s contents into <strong>Import Guides</strong> in RestedXP.</p>
+      </form>
+    </section>
+
+    <div class="local-details">
+      <section id="saved-source" class="source-summary" aria-labelledby="saved-heading" hidden>
+        <h2 id="saved-heading">Original guide</h2>
+        <p id="saved-name" class="source-name"></p>
+        <p id="saved-details" class="secondary"></p>
+        <div class="source-actions">
+          <button id="change-source" class="text-button" type="button">Change guide</button>
+          <button id="forget-source" class="text-button" type="button">Forget guide</button>
+        </div>
+      </section>
+      <p class="privacy">Guide files and BattleTags stay in this browser.</p>
+    </div>
+  </main>
+</body>
+</html>
