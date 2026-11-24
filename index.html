@@ -6,9 +6,9 @@
   <meta name="description" content="Rebuild a RestedXP import for a different BattleTag in your browser.">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; base-uri 'none'; form-action 'none'">
   <title>RestedXP Guide Rebuilder</title>
-  <link rel="stylesheet" href="./site.css">
-  <script src="./guide.js" defer></script>
-  <script src="./site.js" defer></script>
+  <link rel="stylesheet" href="./site.css?v=2">
+  <script src="./guide.js?v=2" defer></script>
+  <script src="./site.js?v=2" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -27,10 +27,14 @@
       <form id="source-form" hidden>
         <h2>Set up your original guide</h2>
         <p class="secondary explanation">Choose the original import file and enter the BattleTag it was made for.</p>
-        <label for="source-file">Original import file</label>
-        <input id="source-file" type="file" accept=".txt,text/plain" required>
+        <span id="file-label" class="file-label">Original import file</span>
+        <div class="file-picker" role="group" aria-labelledby="file-label">
+          <button id="choose-source-file" type="button" aria-describedby="source-file-state">Choose file</button>
+          <span id="source-file-state" class="secondary" role="status">No file selected</span>
+          <input id="source-file" type="file" accept=".txt,text/plain" hidden>
+        </div>
         <label for="source-tag">Original BattleTag</label>
-        <input id="source-tag" type="text" placeholder="Name#1234" autocomplete="off" autocapitalize="off" spellcheck="false" required>
+        <input id="source-tag" type="password" placeholder="Name#1234" autocomplete="off" autocapitalize="off" spellcheck="false" required>
         <button id="save-source" class="primary" type="submit">Save original guide</button>
         <button id="cancel-source" class="text-button cancel" type="button" hidden>Cancel</button>
         <p id="source-message" class="message" role="status"></p>
@@ -49,8 +53,7 @@
 
     <div class="local-details">
       <section id="saved-source" class="source-summary" aria-labelledby="saved-heading" hidden>
-        <h2 id="saved-heading">Original guide</h2>
-        <p id="saved-name" class="source-name"></p>
+        <h2 id="saved-heading">Original guide saved</h2>
         <p id="saved-details" class="secondary"></p>
         <div class="source-actions">
           <button id="change-source" class="text-button" type="button">Change guide</button>

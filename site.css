@@ -78,7 +78,6 @@ h2 { font-size: 1.5rem; font-weight: 650; letter-spacing: -.023em; }
   border-block-start: 1px solid var(--line);
 }
 .source-summary h2 { margin-block-end: .6rem; font-size: 1rem; letter-spacing: 0; }
-.source-name { font-weight: 600; overflow-wrap: anywhere; }
 .secondary { color: var(--muted); }
 .source-summary .secondary { font-size: .875rem; overflow-wrap: anywhere; }
 .source-actions { display: flex; flex-wrap: wrap; column-gap: 1.25rem; margin-block-start: .4rem; }
@@ -92,8 +91,8 @@ h2 { font-size: 1.5rem; font-weight: 650; letter-spacing: -.023em; }
   padding: 2rem;
 }
 .explanation { margin-block: .6rem 1.55rem; }
-label { display: block; margin-block-end: .45rem; font-size: .9rem; font-weight: 650; }
-input {
+label, .file-label { display: block; margin-block-end: .45rem; font-size: .9rem; font-weight: 650; }
+input, .file-picker {
   inline-size: 100%;
   min-inline-size: 0;
   min-block-size: 3rem;
@@ -104,12 +103,18 @@ input {
   border-radius: .45rem;
   caret-color: var(--accent);
 }
-input[type="text"] { padding-inline: .85rem; }
+input[type="text"], input[type="password"] { padding-inline: .85rem; }
 input::placeholder { color: var(--muted); }
-input[type="file"] { padding: .35rem; font-size: .875rem; }
-input::file-selector-button {
+.file-picker {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .35rem .65rem;
+  padding: .35rem;
+  font-size: .875rem;
+}
+.file-picker button {
   min-block-size: 2.2rem;
-  margin-inline-end: .6rem;
   padding: .35rem .65rem;
   border: 0;
   border-radius: .275rem;
@@ -117,8 +122,8 @@ input::file-selector-button {
   background: var(--line);
   font: inherit;
   font-weight: 600;
-  cursor: pointer;
 }
+.file-picker button:hover { background: var(--field-line); }
 input:hover { border-color: var(--muted); }
 .primary, .text-button { transition: background-color 160ms ease, color 160ms ease; }
 .primary {

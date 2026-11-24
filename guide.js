@@ -116,14 +116,9 @@ globalThis.GuideImport = (() => {
     return bundle.header + btoa(binary) + bundle.footer;
   }
 
-  function fileName(originalName, originalTag, targetTag) {
-    const stem = originalName.replace(/\.txt$/i, "");
-    const label = tag => tag.replace(/[^\p{L}\p{N}_-]/gu, "");
-    const originalLabel = label(originalTag);
-    const prefix = stem.toLowerCase().endsWith(originalLabel.toLowerCase())
-      ? stem.slice(0, -originalLabel.length)
-      : stem + "-";
-    return prefix + label(targetTag) + ".txt";
+  function fileName(targetTag) {
+    const label = targetTag.replace(/[^\p{L}\p{N}_-]/gu, "");
+    return `RestedXP-Guide-${label}.txt`;
   }
 
   return { battleTag, open, rebuild, fileName };

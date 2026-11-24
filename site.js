@@ -2,6 +2,8 @@ const element = id => document.getElementById(id);
 const sourceForm = element("source-form");
 const targetForm = element("target-form");
 const sourceFile = element("source-file");
+const chooseSourceFile = element("choose-source-file");
+const sourceFileState = element("source-file-state");
 const sourceTag = element("source-tag");
 const targetTag = element("target-tag");
 const saveButton = element("save-source");
@@ -48,23 +50,38 @@ function showForm(editingSource) {
   cancelButton.hidden = !source;
   element("saved-source").hidden = !source;
   if (source) {
-    element("saved-name").textContent = source.file.name;
     const guides = source.bundle.count === 1 ? "guide" : "guides";
     const scope = source.saved ? "" : " · This visit only";
     element("saved-details").textContent =
-      `${source.tag} · ${guideCount.format(source.bundle.count)} ${guides}${scope}`;
+      `${guideCount.format(source.bundle.count)} ${guides}${scope}`;
   }
 }
 
+function resetSourceForm() {
+  sourceForm.reset();
+  sourceFileState.textContent = "No file selected";
+}
+
+chooseSourceFile.addEventListener("click", () => sourceFile.click());
+sourceFile.addEventListener("change", () => {
+  sourceFileState.textContent = sourceFile.files.length ? "File selected" : "No file selected";
+});
+
 sourceForm.addEventListener("submit", async event => {
   event.preventDefault();
+  const file = sourceFile.files[0];
+  if (!file) {
+    message(sourceMessage, "Choose an original import file.", "error");
+    chooseSourceFile.focus();
+    return;
+  }
+  chooseSourceFile.disabled = true;
   saveButton.disabled = true;
   changeButton.disabled = true;
   cancelButton.disabled = true;
   forgetButton.disabled = true;
   message(sourceMessage, "Checking the original guide…");
   try {
-    const file = sourceFile.files[0];
     const tag = GuideImport.battleTag(sourceTag.value);
     const bundle = await GuideImport.open(file, tag);
     let saved = true;
@@ -73,14 +90,15 @@ sourceForm.addEventListener("submit", async event => {
     } catch {
       saved = false;
     }
-    source = { file, tag, bundle, saved };
-    sourceForm.reset();
+    source = { tag, bundle, saved };
+    resetSourceForm();
     showForm(false);
     message(targetMessage, saved ? "" : "Browser storage is unavailable. The original guide is ready for this visit.");
     targetTag.focus();
   } catch (error) {
     message(sourceMessage, error.message, "error");
   } finally {
+    chooseSourceFile.disabled = false;
     saveButton.disabled = false;
     changeButton.disabled = false;
     cancelButton.disabled = false;
@@ -92,11 +110,11 @@ changeButton.addEventListener("click", () => {
   sourceTag.value = source.tag;
   message(sourceMessage);
   showForm(true);
-  sourceFile.focus();
+  chooseSourceFile.focus();
 });
 
 cancelButton.addEventListener("click", () => {
-  sourceForm.reset();
+  resetSourceForm();
   showForm(false);
   targetTag.focus();
 });
@@ -108,11 +126,11 @@ forgetButton.addEventListener("click", async () => {
   try {
     if (source.saved) await accessStorage("readwrite", store => store.delete("source"));
     source = undefined;
-    sourceForm.reset();
+    resetSourceForm();
     targetForm.reset();
     message(sourceMessage, "Original guide removed from this browser.");
     showForm(true);
-    sourceFile.focus();
+    chooseSourceFile.focus();
   } catch {
     message(sourceForm.hidden ? targetMessage : sourceMessage,
       "Browser storage is unavailable. Try removing the guide again after reloading.", "error");
@@ -131,7 +149,7 @@ targetForm.addEventListener("submit", event => {
     const url = URL.createObjectURL(new Blob([rebuilt], { type: "text/plain;charset=utf-8" }));
     const link = document.createElement("a");
     link.href = url;
-    link.download = GuideImport.fileName(source.file.name, source.tag, tag);
+    link.download = GuideImport.fileName(tag);
     document.body.append(link);
     link.click();
     link.remove();
@@ -147,7 +165,7 @@ async function start() {
     const saved = await accessStorage("readonly", store => store.get("source"));
     if (saved) {
       const bundle = await GuideImport.open(saved.file, saved.tag);
-      source = { ...saved, bundle, saved: true };
+      source = { tag: saved.tag, bundle, saved: true };
     }
   } catch {
     message(sourceMessage, "We couldn’t load a saved guide. Choose the original file to continue.");
